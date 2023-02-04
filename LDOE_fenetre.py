@@ -52,68 +52,117 @@ def Bunker(date):
 today()
 Bunker(today())
 
+
 class Ui_MainWindow(object):
-    # setupUi
+    """
+    La classe Ui_MainWindow permet de créer la fenêtre principale de notre UI.
+    
+    Paramètres
+    ----------
+    Aucuns
+    
+    Example
+    -------
+    MainWindow = QtWidgets.QMainWindow()
+    ui= Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    """
+    
+    def __init__(self):
+        """
+        Constructeur de la classe Ui_MainWindow
+
+        Returns
+        -------
+        None.
+
+        """
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+        
+        self.font = QFont()
+        self.font.setFamily(u"DejaVu Sans")
+        self.font.setPointSize(12)
+        self.font.setBold(True)
+        self.font.setItalic(False)
+        self.font.setWeight(75)
+               
+    def creer_Qlabel(self, name, geometry, txt):
+        """
+        Crée un Qlabel de manière générique adapté à nos besoins.
+
+        Paramètres
+        ----------
+        name : unicode string : Nom du Qlabel
+        geometry : QRect : Taille du Qlabel
+        txt : unicode string : Texte à afficher
+
+        Returns
+        -------
+        self : Qlabel Object
+
+        """
+        self = QLabel(self.centralwidget)
+        self.setObjectName(name)
+        self.setGeometry(geometry)
+        self.setText(QCoreApplication.translate("MainWindow", txt, None))
+        return self
+
+    def creer_QComboBox(self, items, name, geometry):
+        """
+        Crée une QComboBox de manière générique adapté à nos besoins.
+
+        Paramètres
+        ----------
+        items : liste d'unicode string : Liste contenant l'ensemble des items à ajouter dans la QComboBox
+        name : unicode string : Nom du QComboBox
+        geometry : unicode string : Texte à afficher
+
+        Returns
+        -------
+        self : QComboBox Object
+
+        """
+        self = QComboBox(self.centralwidget)
+        self.addItems(items)
+        self.setObjectName(name)
+        self.setGeometry(geometry)
+        return self
+    
     def setupUi(self, MainWindow):
+        """
+        Mise en place des informations de la fenêtre principale.
+
+        Paramètres
+        ----------
+        MainWindow : QtWidgets.QMainWindow() Object : Fenêtre
+
+        Returns
+        -------
+        None.
+
+        """
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setEnabled(True)
         MainWindow.resize(530, 519)
-        #MainWindow.resize(QDesktopWidget().width()*0.5, QDesktopWidget().height()*0.5)
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Fenêtre principale", None))
         
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
+        self.Date_txt = self.creer_Qlabel(u"Date_txt", QRect(10, 10, 110, 16), u"Date (JJ/MM) :")
+        self.Date_val = self.creer_Qlabel(u"Date_val", QRect(120, 10, 71, 16), JJ_MM)
+        self.Code_txt = self.creer_Qlabel(u"Code_txt", QRect(360, 10, 100, 16), u"Code Bunker : ")
+        self.Code_val = self.creer_Qlabel(u"Code_val", QRect(470, 10, 51, 16), code)
         
-        self.Date_txt = QLabel(self.centralwidget)
-        self.Date_txt.setObjectName(u"Date_txt")
-        self.Date_txt.setGeometry(QRect(10, 10, 110, 16))
-        self.Date_txt.setText(QCoreApplication.translate("MainWindow", u"Date (JJ/MM) :", None))
-        
-        self.Date_val = QLabel(self.centralwidget)
-        self.Date_val.setObjectName(u"Date_val")
-        self.Date_val.setGeometry(QRect(120, 10, 71, 16))
-        self.Date_val.setText(QCoreApplication.translate("MainWindow", JJ_MM, None))
-        
-        self.Code_txt = QLabel(self.centralwidget)
-        self.Code_txt.setObjectName(u"Code_txt")
-        self.Code_txt.setGeometry(QRect(360, 10, 100, 16))
-        self.Code_txt.setText(QCoreApplication.translate("MainWindow", u"Code Bunker : ", None))
-        
-        self.Code_val = QLabel(self.centralwidget)
-        self.Code_val.setObjectName(u"Code_val")
-        self.Code_val.setGeometry(QRect(470, 10, 51, 16))
-        self.Code_val.setText(QCoreApplication.translate("MainWindow", code, None))
-        
-        self.label_zone = QLabel(self.centralwidget)
-        self.label_zone.setObjectName(u"label_zone")
-        self.label_zone.setGeometry(QRect(165, 70, 200, 61))
+        self.label_zone = self.creer_Qlabel(u"label_zone", QRect(165, 70, 200, 61), u"Choisir la zone")
         self.label_zone.setStatusTip(QCoreApplication.translate("MainWindow", u"Choisir une zone à découvrir.", None))
-        self.label_zone.setText(QCoreApplication.translate("MainWindow", u"Choisir la zone", None))
+        self.label_zone.setFont(self.font)
         
-        font = QFont()
-        font.setFamily(u"DejaVu Sans")
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setItalic(False)
-        font.setWeight(75)
-        self.label_zone.setFont(font)
+        items = [u"Pin\u00e8des", u"Cr\u00eate de calcaire", u"Station essence", u"Port"]
+        self.CB_zone = self.creer_QComboBox(items, u"CB_zone", QRect(150, 150, 201, 31))
         
-        self.CB_zone = QComboBox(self.centralwidget)
-        self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Pin\u00e8des", None))
-        self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Cr\u00eate de calcaire", None))
-        self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Station essence", None))
-        self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Port", None))
-        self.CB_zone.setObjectName(u"CB_zone")
-        self.CB_zone.setGeometry(QRect(150, 150, 201, 31))
-        
-        self.CB_couleur = QComboBox(self.centralwidget)
-        self.CB_couleur.addItem(QCoreApplication.translate("MainWindow", u"Vert", None))
-        self.CB_couleur.addItem(QCoreApplication.translate("MainWindow", u"Jaune", None))
-        self.CB_couleur.addItem(QCoreApplication.translate("MainWindow", u"Rouge", None))
-        self.CB_couleur.addItem(QCoreApplication.translate("MainWindow", u"Bleu", None))
-        self.CB_couleur.setObjectName(u"CB_couleur")
-        self.CB_couleur.setGeometry(QRect(40, 150, 101, 31))
+        items = [u"Vert", u"Jaune", u"Rouge", u"Bleu"]
+        self.CB_couleur = self.creer_QComboBox(items, u"CB_couleur", QRect(40, 150, 101, 31))
         self.CB_couleur.currentTextChanged.connect(lambda: self.clicked_couleur(str(self.CB_couleur.currentText())))
         
         self.Boutton_zone = QPushButton(self.centralwidget)
@@ -122,13 +171,10 @@ class Ui_MainWindow(object):
         self.Boutton_zone.setText(QCoreApplication.translate("MainWindow", u"OK", None))
         self.Boutton_zone.clicked.connect(lambda: self.clicked_bt_zone(str(self.CB_zone.currentText())))
         
-        self.label_ressource = QLabel(self.centralwidget)
-        self.label_ressource.setObjectName(u"label_ressource")
-        self.label_ressource.setGeometry(QRect(130, 200, 270, 61))
-        self.label_ressource.setFont(font)
+        self.label_ressource = self.creer_Qlabel(u"label_ressource", QRect(130, 200, 270, 61), u"Chercher Ressource")
         self.label_ressource.setStatusTip(QCoreApplication.translate(
             "MainWindow", u"Taper la ressource que vous souhaitez trouver. Il en sortira les lieux o\u00f9 la trouver.", None))
-        self.label_ressource.setText(QCoreApplication.translate("MainWindow", u"Chercher Ressource", None))
+        self.label_ressource.setFont(self.font)
         
         self.lineEdit = QLineEdit(self.centralwidget)
         self.lineEdit.setObjectName(u"lineEdit")
@@ -152,40 +198,26 @@ class Ui_MainWindow(object):
         
     def clicked_couleur(self, couleur):
         if couleur=="Vert":
+            items = [u"Pin\u00e8des", u"Cr\u00eate de calcaire", u"Station essence", u"Port"]
             self.CB_zone.clear()
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Pin\u00e8des", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Cr\u00eate de calcaire", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Station essence", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Port", None))
+            self.CB_zone.addItems(items)
         elif couleur=="Jaune":
+            items = [u"Bosquet de pins", u"Falaises calcaires", u"H\u00f4tel", u"Brousses de ch\u00eane", u"Pied de montagne Bois\u00e9", u"F\u00f4ret des marais"]
             self.CB_zone.clear()
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Bosquet de pins", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Falaises calcaires", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"H\u00f4tel", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Brousses de ch\u00eane", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Pied de montagne Bois\u00e9", None))
+            self.CB_zone.addItems(items)
         elif couleur=="Rouge":
+            items = [u"Usine abandonn\u00e9e", u"Fl\u00e8ches de calcaires", u"For\u00eat infect\u00e9e", u"Vieille Ferme", u"Bunker Alpha", u"Bunker Bravo", u"Commissariat de police", u"Ch\u00eaneraie", 
+                     u"For\u00eat gel\u00e9e", u"Carri\u00e8re de sable", u"\u00cele des morts", u"Tourbi\u00e8re sauvages"]
             self.CB_zone.clear()
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Bois de Pin", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Fl\u00e8ches de calcaires", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"For\u00eat infect\u00e9e", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Vieille Ferme", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Bunker Alpha", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Bunker Bravo", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Commissariat de police", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Ch\u00eaneraie", None))
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"For\u00eat gel\u00e9e", None))
+            self.CB_zone.addItems(items)
         else:
+            items = [u"Tour de guet de l'est", u"Tour de guet du nord", u"Tour de guet", u"Plate-forme p\u00e9troli\u00e8re"]
             self.CB_zone.clear()
-            self.CB_zone.addItem(QCoreApplication.translate("MainWindow", u"Tour de guet", None))
+            self.CB_zone.addItems(items)
         
     def clicked_bt_zone(self, zone):
-        if zone=="Pin\u00e8des":
-            self.w=Ui_WindowZone()
-            self.w.setupUi(self.w)
-            self.w.show()
             
-        elif zone=="Port":
+        if zone=="Port":
             self.w=Ui_WindowZone()
             self.w.setupUi(self.w)
             self.w.setupPort(self.w)
