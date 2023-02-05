@@ -53,33 +53,25 @@ today()
 Bunker(today())
 
 
-class Ui_MainWindow(object):
+class creer_Q():
     """
-    La classe Ui_MainWindow permet de créer la fenêtre principale de notre UI.
+    La classe creer_Q regroupe les méthodes de création de QObjects.
     
     Paramètres
     ----------
-    Aucuns
+    None.
     
-    Example
-    -------
-    MainWindow = QtWidgets.QMainWindow()
-    ui= Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
     """
     
     def __init__(self):
         """
-        Constructeur de la classe Ui_MainWindow
+        Constructeur de la classe creer_Q
 
         Returns
         -------
         None.
 
         """
-        self.centralwidget = QWidget(MainWindow)
-        self.centralwidget.setObjectName(u"centralwidget")
         
         self.font = QFont()
         self.font.setFamily(u"DejaVu Sans")
@@ -87,7 +79,7 @@ class Ui_MainWindow(object):
         self.font.setBold(True)
         self.font.setItalic(False)
         self.font.setWeight(75)
-               
+        
     def creer_Qlabel(self, name, geometry, txt):
         """
         Crée un Qlabel de manière générique adapté à nos besoins.
@@ -95,7 +87,7 @@ class Ui_MainWindow(object):
         Paramètres
         ----------
         name : unicode string : Nom du Qlabel
-        geometry : QRect : Taille du Qlabel
+        geometry : QRect : Forme et taille du Qlabel
         txt : unicode string : Texte à afficher
 
         Returns
@@ -117,7 +109,7 @@ class Ui_MainWindow(object):
         ----------
         items : liste d'unicode string : Liste contenant l'ensemble des items à ajouter dans la QComboBox
         name : unicode string : Nom du QComboBox
-        geometry : unicode string : Texte à afficher
+        geometry :  QRect : Forme et taille du QComboBox
 
         Returns
         -------
@@ -125,10 +117,89 @@ class Ui_MainWindow(object):
 
         """
         self = QComboBox(self.centralwidget)
-        self.addItems(items)
         self.setObjectName(name)
         self.setGeometry(geometry)
+        self.addItems(items)
         return self
+
+    def creer_QPushButton(self, name, geometry, txt):
+        """
+        Crée une QPushButton de manière générique adapté à nos besoins.
+
+        Parameters
+        ----------
+        name : unicode string : Nom du QPushButton
+        geometry :  QRect : Forme et taille du QPushButton
+        txt : unicode string : Texte à afficher
+
+        Returns
+        -------
+        self : QPushButton Object
+
+        """
+        self = QPushButton(self.centralwidget)
+        self.setObjectName(name)
+        self.setGeometry(geometry)
+        self.setText(txt)
+        return self
+
+    def creer_QSpinBox(self, name, geometry, max_size, mini, maxi, value):
+        """
+        Crée une QSpinBox de manière générique adapté à nos besoins.
+
+        Parameters
+        ----------
+        name : unicode string : Nom du QSpinBox
+        geometry :  QRect : Forme et taille du QSpinBox
+        max_size : QSize : ??
+        mini : int : Valeur minimale
+        maxi : int : Valeur maximale
+        value : int : Valeur par défaut
+
+        Returns
+        -------
+        self : QSpinBox Object
+
+        """
+        self = QSpinBox(self.centralwidget)
+        self.setObjectName(name)
+        self.setGeometry(geometry)
+        self.setMaximumSize(max_size)
+        self.setMinimum(mini)
+        self.setMaximum(maxi)
+        self.setValue(value)
+        return self
+    
+
+class Ui_MainWindow(QWidget, creer_Q):
+    """
+    La classe Ui_MainWindow permet de créer la fenêtre principale de notre UI.
+    
+    Paramètres
+    ----------
+    Objet de type QtWidgets
+    
+    Exemple
+    -------
+    MainWindow = QtWidgets.QMainWindow()
+    ui= Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    """
+    
+    def __init__(self):
+        """
+        Constructeur de la classe Ui_MainWindow
+
+        Returns
+        -------
+        None.
+
+        """
+        super().__init__()
+        self.centralwidget = QWidget(MainWindow)
+        self.centralwidget.setObjectName(u"centralwidget")
+               
     
     def setupUi(self, MainWindow):
         """
@@ -165,10 +236,7 @@ class Ui_MainWindow(object):
         self.CB_couleur = self.creer_QComboBox(items, u"CB_couleur", QRect(40, 150, 101, 31))
         self.CB_couleur.currentTextChanged.connect(lambda: self.clicked_couleur(str(self.CB_couleur.currentText())))
         
-        self.Boutton_zone = QPushButton(self.centralwidget)
-        self.Boutton_zone.setObjectName(u"Boutton_zone")
-        self.Boutton_zone.setGeometry(QRect(400, 150, 91, 31))
-        self.Boutton_zone.setText(QCoreApplication.translate("MainWindow", u"OK", None))
+        self.Boutton_zone = self.creer_QPushButton(u"Boutton_zone", QRect(400, 150, 91, 31),  u"OK")
         self.Boutton_zone.clicked.connect(lambda: self.clicked_bt_zone(str(self.CB_zone.currentText())))
         
         self.label_ressource = self.creer_Qlabel(u"label_ressource", QRect(130, 200, 270, 61), u"Chercher Ressource")
@@ -180,21 +248,19 @@ class Ui_MainWindow(object):
         self.lineEdit.setObjectName(u"lineEdit")
         self.lineEdit.setGeometry(QRect(40, 270, 311, 31))
         
-        self.Button_ressource = QPushButton(self.centralwidget)
-        self.Button_ressource.setObjectName(u"Button_ressource")
-        self.Button_ressource.setGeometry(QRect(400, 270, 91, 31))
-        self.Button_ressource.setText(QCoreApplication.translate("MainWindow", u"OK", None))
+        self.Button_ressource = self.creer_QPushButton(u"Button_ressource", QRect(400, 270, 91, 31),  u"OK")
         
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 530, 22))
+        
         MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
+        self.statusbar = QStatusBar(self.centralwidget)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        QMetaObject.connectSlotsByName(MainWindow)      
+        QMetaObject.connectSlotsByName(MainWindow)
         
     def clicked_couleur(self, couleur):
         if couleur=="Vert":
@@ -218,120 +284,86 @@ class Ui_MainWindow(object):
     def clicked_bt_zone(self, zone):
             
         if zone=="Port":
-            self.w=Ui_WindowZone()
-            self.w.setupUi(self.w)
-            self.w.setupPort(self.w)
-            self.w.show()
+            self.w_port=Ui_WindowPort()
+            self.w_port.setupUi(self.w_port)
+            #self.w_port.setupPort(self.w_port)
+            self.w_port.show()
             
         else:
             print(zone)
             
         
-class Ui_WindowZone(QWidget):
+class Ui_WindowPort(QWidget, creer_Q):
+    """
+    La classe Ui_WindowPort permet de créer la fenêtre correspondant à la zone du port de notre UI.
     
-    def setupUi(self, WindowZone):
-        if WindowZone.objectName():
-            WindowZone.setObjectName(u"WindowZone")
-        WindowZone.setEnabled(True)
-        WindowZone.resize(530, 519)
-        #MainWindow.resize(QDesktopWidget().width()*0.5, QDesktopWidget().height()*0.5)
-        WindowZone.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        
+    Paramètres
+    ----------
+    Aucuns
+    
+    Example
+    -------
+    
+    """
+    
+    def __init__(self):
+        """
+        Constructeur de la classe Ui_WindowPort
 
-    def setupPort(self, WindowPort):
+        Returns
+        -------
+        None.
+
+        """
+        
+        super().__init__()
+        self.centralwidget = QWidget(self)
+        self.centralwidget.setObjectName(u"centralwidget")
         
         self.txt_before="<!DOCTYPE HTML PUBLIC>\n <html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n p, li { white-space: pre-wrap; }\n </style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
         self.txt_style="<p style=\" margin-top:1px; margin-bottom:1px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    
+    def setupUi(self, WindowPort):
+        if WindowPort.objectName():
+            WindowPort.setObjectName(u"WindowPort")
+        WindowPort.setEnabled(True)
+        WindowPort.resize(530, 519)
+        WindowPort.setWindowTitle(QCoreApplication.translate("WindowPort", u"Zone du port", None))
         
-        WindowPort.setWindowTitle(QCoreApplication.translate("WindowPort", u"WindowPort", None))
+        self.Code_txt = self.creer_Qlabel(u"Code_txt", QRect(380, 10, 71, 16), u"Code Bunker : ")
+        self.Code_val = self.creer_Qlabel(u"Code_val", QRect(470, 10, 51, 16), code)
+        self.Date_txt = self.creer_Qlabel(u"Date_txt", QRect(10, 10, 81, 16), u"Date (JJ/MM) :")
+        self.Date_val = self.creer_Qlabel(u"Date_val", QRect(90, 10, 71, 16), JJ_MM)
         
-        self.Code_txt = QLabel(WindowPort)
-        self.Code_txt.setObjectName(u"Code_txt")
-        self.Code_txt.setGeometry(QRect(380, 10, 71, 16))
-        self.Code_txt.setText(QCoreApplication.translate("WindowPort", u"Code Bunker : ", None))
+        txt = u"<html><head/><body><p><span style=\" font-size:14pt;\">D\u00e9couvrir la zone du Port</span></p></body></html>"
+        self.Port_txt = self.creer_Qlabel(u"Port_txt", QRect(150, 30, 221, 61), txt)
         
-        self.Code_val = QLabel(WindowPort)
-        self.Code_val.setObjectName(u"Code_val")
-        self.Code_val.setGeometry(QRect(470, 10, 51, 16))
-        self.Code_val.setText(QCoreApplication.translate("WindowPort", code, None))
+        items = [u"Boite de mat\u00e9riaux basiques vide", u"Boite d'outils vide", u"Sac R\u00e9frig\u00e9rant vide", u"Boite de mat\u00e9riaux rares vide",
+                 u"Boite de mat\u00e9riaux basiques plein", u"Boite d'outils plein", u"Sac R\u00e9frig\u00e9rant plein", u"Boite de mat\u00e9riaux rares plein"]
+        self.CB_Boite = self.creer_QComboBox(items, u"CB_Boite", QRect(180, 130, 191, 31))
         
-        self.Date_txt = QLabel(WindowPort)
-        self.Date_txt.setObjectName(u"Date_txt")
-        self.Date_txt.setGeometry(QRect(10, 10, 81, 16))
-        self.Date_txt.setText(QCoreApplication.translate("MainWindow", u"Date (JJ/MM) :", None))
+        txt = u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Jake</span></p></body></html>"
+        self.Jake_txt = self.creer_Qlabel(u"Jake_txt", QRect(150, 70, 221, 61), txt)
         
-        self.Date_val = QLabel(WindowPort)
-        self.Date_val.setObjectName(u"Date_val")
-        self.Date_val.setGeometry(QRect(90, 10, 71, 16))
-        self.Date_val.setText(QCoreApplication.translate("WindowPort", JJ_MM, None))
-        
-        self.Port_txt = QLabel(WindowPort)
-        self.Port_txt.setObjectName(u"Port_txt")
-        self.Port_txt.setGeometry(QRect(150, 30, 221, 61))
-        self.Port_txt.setText(QCoreApplication.translate("WindowPort", u"<html><head/><body><p><span style=\" font-size:14pt;\">D\u00e9couvrir la zone du Port</span></p></body></html>", None))
-        
-        self.CB_Boite = QComboBox(WindowPort)
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux basiques vide", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite d'outils vide", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Sac R\u00e9frig\u00e9rant vide", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux rares vide", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux basiques plein", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite d'outils plein", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Sac R\u00e9frig\u00e9rant plein", None))
-        self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux rares plein", None))
-        self.CB_Boite.setObjectName(u"CB_Boite")
-        self.CB_Boite.setGeometry(QRect(180, 130, 191, 31))
-        
-        self.Jake_txt = QLabel(WindowPort)
-        self.Jake_txt.setObjectName(u"Jake_txt")
-        self.Jake_txt.setGeometry(QRect(150, 70, 221, 61))
-        self.Jake_txt.setText(QCoreApplication.translate("WindowPort", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Jake</span></p></body></html>", None))
-        
-        self.CB_Livraison = QComboBox(WindowPort)
-        self.CB_Livraison.addItem(QCoreApplication.translate("WindowPort", u"Livraison", None))
-        self.CB_Livraison.addItem(QCoreApplication.translate("WindowPort", u"Laboratoire", None))
-        self.CB_Livraison.addItem(QCoreApplication.translate("WindowPort", u"Verrouill\u00e9(e)", None))
-        self.CB_Livraison.setObjectName(u"CB_Livraison")
-        self.CB_Livraison.setGeometry(QRect(40, 130, 131, 31))
+        items = [u"Livraison", u"Laboratoire", u"Verrouill\u00e9(e)"]
+        self.CB_Livraison = self.creer_QComboBox(items, u"CB_Livraison", QRect(40, 130, 131, 31))
         self.CB_Livraison.currentTextChanged.connect(lambda: self.clicked_Jake(str(self.CB_Livraison.currentText())))
         
-        self.Bt_Actualiser_Boite = QPushButton(WindowPort)
-        self.Bt_Actualiser_Boite.setObjectName(u"Bt_Actualiser_Boite")
-        self.Bt_Actualiser_Boite.setGeometry(QRect(430, 130, 91, 31))
-        self.Bt_Actualiser_Boite.setText(QCoreApplication.translate("WindowPort", u"Actualiser", None))
+        self.Bt_Actualiser_Boite = self.creer_QPushButton(u"Bt_Actualiser_Boite", QRect(430, 130, 91, 31),  u"Actualiser")
         self.Bt_Actualiser_Boite.clicked.connect(lambda: self.total())
         
-        self.Nb_boite_txt = QLabel(WindowPort)
-        self.Nb_boite_txt.setObjectName(u"Nb_boite_txt")
-        self.Nb_boite_txt.setGeometry(QRect(380, 125, 47, 14))
-        self.Nb_boite_txt.setText(QCoreApplication.translate("WindowPort", u"NB Boite", None))
+        self.Nb_boite_txt = self.creer_Qlabel(u"Nb_boite_txt", QRect(380, 125, 47, 14), u"NB Boite")
         
-        self.spinBox_Nb_boite = QSpinBox(WindowPort)
-        self.spinBox_Nb_boite.setObjectName(u"spinBox_Nb_boite")
-        self.spinBox_Nb_boite.setGeometry(QRect(380, 140, 42, 22))
-        self.spinBox_Nb_boite.setMaximumSize(QSize(42, 16777215))
-        self.spinBox_Nb_boite.setMinimum(1)
-        self.spinBox_Nb_boite.setMaximum(50)
-        self.spinBox_Nb_boite.setValue(8)
+        self.spinBox_Nb_boite = self.creer_QSpinBox(u"spinBox_Nb_boite", QRect(380, 140, 42, 22), QSize(42, 16777215), 1, 50, 8)
         
         temp=self.txt_before+self.txt_style+"1. XX object1</p\n"+self.txt_style+"    XX object2</p></body></html>"
-        
-        self.Boite_1_txt = QLabel(WindowPort)
-        self.Boite_1_txt.setObjectName(u"Boite_1_txt")
-        self.Boite_1_txt.setGeometry(QRect(40, 180, 161, 51))
-        self.Boite_1_txt.setText(QCoreApplication.translate("WindowPort", temp, None))
+        self.Boite_1_txt = self.creer_Qlabel(u"Boite_1_txt", QRect(40, 180, 161, 51), temp)
         
         temp=self.txt_before+self.txt_style+"2. XX object1</p\n"+self.txt_style+"    XX object2</p></body></html>"
+        self.Boite_2_txt = self.creer_Qlabel(u"Boite_2_txt", QRect(40, 225, 161, 51), temp)
         
-        self.Boite_2_txt = QLabel(WindowPort)
-        self.Boite_2_txt.setObjectName(u"Boite_2_txt")
-        self.Boite_2_txt.setGeometry(QRect(40, 225, 161, 51))
-        self.Boite_2_txt.setText(QCoreApplication.translate("WindowPort", temp, None))
-        
-        self.Place_sac_1 = QLabel(WindowPort)
-        self.Place_sac_1.setObjectName(u"Place_sac_1")
-        self.Place_sac_1.setGeometry(QRect(200, 180, 161, 21))
-        self.Place_sac_1.setText(QCoreApplication.translate("WindowPort", u"XX places dans le sac sur XX", None))
+        self.Place_sac_1 = self.creer_Qlabel(u"Place_sac_1", QRect(200, 190, 161, 21), u"XX places dans le sac sur XX")
+        self.Place_sac_2 = self.creer_Qlabel(u"Place_sac_2", QRect(200, 230, 161, 21), u"XX places dans le sac sur XX")
         
         self.radioButton_sac_1 = QRadioButton(WindowPort)
         self.radioButton_sac_1.setObjectName(u"radioButton_sac_1")
@@ -349,28 +381,10 @@ class Ui_WindowZone(QWidget):
         self.radioButton_sac_3.setText(QCoreApplication.translate("WindowPort", u"3", None))
         self.radioButton_sac_3.setChecked(True)
         
-        self.Sac_txt = QLabel(WindowPort)
-        self.Sac_txt.setObjectName(u"Sac_txt")
-        self.Sac_txt.setGeometry(QRect(430, 180, 47, 14))
-        self.Sac_txt.setText(QCoreApplication.translate("WindowPort", u"Sac n\u00b0", None))
+        self.Sac_txt = self.creer_Qlabel(u"Sac_txt", QRect(430, 180, 47, 14), u"Sac n\u00b0")
+        self.Chopper_txt = self.creer_Qlabel(u"Chopper_txt", QRect(400, 232, 47, 14), u"Chopper")
         
-        self.Place_sac_2 = QLabel(WindowPort)
-        self.Place_sac_2.setObjectName(u"Place_sac_2")
-        self.Place_sac_2.setGeometry(QRect(200, 220, 161, 21))
-        self.Place_sac_2.setText(QCoreApplication.translate("WindowPort", u"XX places dans le sac sur XX", None))
-        
-        self.Chopper_txt = QLabel(WindowPort)
-        self.Chopper_txt.setObjectName(u"Chopper_txt")
-        self.Chopper_txt.setGeometry(QRect(400, 232, 47, 14))
-        self.Chopper_txt.setText(QCoreApplication.translate("WindowPort", u"Chopper", None))
-        
-        self.spinBox_chopper = QSpinBox(WindowPort)
-        self.spinBox_chopper.setObjectName(u"spinBox_chopper")
-        self.spinBox_chopper.setGeometry(QRect(450, 230, 42, 22))
-        self.spinBox_chopper.setMaximumSize(QSize(42, 16777215))
-        self.spinBox_chopper.setMinimum(2)
-        self.spinBox_chopper.setMaximum(8)
-        self.spinBox_chopper.setValue(8)
+        self.spinBox_chopper = self.creer_QSpinBox(u"spinBox_chopper", QRect(450, 230, 42, 22), QSize(42, 16777215), 2, 8, 8)
         
         self.Widget_Nv_2 = QWidget(WindowPort)
         self.Widget_Nv_2.setObjectName(u"Widget_Nv_2")
@@ -456,17 +470,15 @@ class Ui_WindowZone(QWidget):
         self.label_18.setGeometry(QRect(0, 0, 71, 41))
         self.label_18.setText(QCoreApplication.translate("WindowPort", u"<html><head/><body><p align=\"center\">Motif</p></body></html>", None))
         
-        self.Ciment_ressource = QLabel(WindowPort)
-        self.Ciment_ressource.setObjectName(u"Ciment_ressource")
-        self.Ciment_ressource.setGeometry(QRect(200, 400, 71, 71))
-        self.Ciment_ressource.setText(QCoreApplication.translate("WindowPort", u"<!DOCTYPE HTML PUBLIC>\n"
+        txt = (u"<!DOCTYPE HTML PUBLIC>\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:2px; margin-bottom:2px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">15 Sable</p>\n"
 "<p style=\" margin-top:2px; margin-bottom:2px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">20 Pierre</p>\n"
 "<p style=\" margin-top:2px; margin-bottom:2px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">5 Bauxite</p>\n"
-"<p style=\" margin-top:2px; margin-bottom:2px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">10 Eau</p></body></html>", None))
+"<p style=\" margin-top:2px; margin-bottom:2px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">10 Eau</p></body></html>")
+        self.Ciment_ressource = self.creer_Qlabel(u"Ciment_ressource", QRect(200, 400, 71, 71), txt)
         
         self.Ciment_line = QFrame(WindowPort)
         self.Ciment_line.setObjectName(u"Ciment_line")
@@ -475,28 +487,18 @@ class Ui_WindowZone(QWidget):
         self.Ciment_line.setLineWidth(2)
         self.Ciment_line.setFrameShape(QFrame.VLine)
         
-        self.Ciment_nb = QLabel(WindowPort)
-        self.Ciment_nb.setObjectName(u"Ciment_nb")
-        self.Ciment_nb.setGeometry(QRect(280, 420, 61, 16))
-        self.Ciment_nb.setText(QCoreApplication.translate("WindowPort", u"3 Ciments", None))
+        self.Ciment_nb = self.creer_Qlabel(u"Ciment_nb", QRect(280, 420, 61, 16), u"3 Ciments")
         
-        self.Jake_txt_2 = QLabel(WindowPort)
-        self.Jake_txt_2.setObjectName(u"Betonniere")
-        self.Jake_txt_2.setGeometry(QRect(150, 340, 221, 61))
-        self.Jake_txt_2.setText(QCoreApplication.translate("WindowPort", u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">B\u00e9tonni\u00e8re</span></p></body></html>", None))
+        txt=u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">B\u00e9tonni\u00e8re</span></p></body></html>"
+        self.Jake_txt_2 = self.creer_Qlabel(u"Betonniere", QRect(150, 340, 221, 61), txt)
         
     
     def clicked_Jake(self, Jake):
         if Jake=="Livraison":
+            items = [u"Boite de mat\u00e9riaux basiques vide", u"Boite d'outils vide", u"Sac R\u00e9frig\u00e9rant vide", u"Boite de mat\u00e9riaux rares vide",
+                     u"Boite de mat\u00e9riaux basiques plein", u"Boite d'outils plein", u"Sac R\u00e9frig\u00e9rant plein", u"Boite de mat\u00e9riaux rares plein"]
             self.CB_Boite.clear()
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux basiques vide", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite d'outils vide", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Sac R\u00e9frig\u00e9rant vide", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux rares vide", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux basiques plein", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite d'outils plein", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Sac R\u00e9frig\u00e9rant plein", None))
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"Boite de mat\u00e9riaux rares plein", None))
+            self.CB_zone.addItems(items)
         elif Jake=="Laboratoire":
             self.CB_Boite.clear()
             self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"", None))
