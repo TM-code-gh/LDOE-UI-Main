@@ -14,9 +14,25 @@ from PyQt5.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import * 
+from PyQt5.QtWidgets import *
+
+import LDOE_port
+import LDOE_variables
 
 def today():
+    """
+    Récupère la date d'aujourd'hui au format voulu
+
+    Paramètres
+    ----------
+    None.
+
+    Returns
+    -------
+    JJ_MM : string : Date au format JJ/MM
+
+    """
+    
     global JJ_MM
     if(len(str(datetime.date.today().day))==1):
         JJ="0"+str(datetime.date.today().day)
@@ -30,6 +46,24 @@ def today():
     return JJ_MM
     
 def Bunker(date):
+    """
+    Récupère le code du Bunker aujourd'hui
+    
+    !!! 
+    Fonctionnement non autonome
+    Chercher piste d'amélioration
+    !!!
+
+    Paramètres
+    ----------
+    date : string : Date au format JJ/MM (sortie de today())
+
+    Returns
+    -------
+    code : string : Le code du Bunker
+
+    """
+    
     global code
     codes_02=["01922","17539","71617","19295","95363","56227","62328","23121",
            "32991","23679","31256","19237","96271","62983","22711"]
@@ -199,6 +233,18 @@ class Ui_MainWindow(QWidget, creer_Q):
         super().__init__()
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        MainWindow.setCentralWidget(self.centralwidget)
+        
+        self.menubar = QMenuBar(MainWindow)
+        self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 530, 22))
+        MainWindow.setMenuBar(self.menubar)
+        
+        self.statusbar = QStatusBar(self.centralwidget)
+        self.statusbar.setObjectName(u"statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+        
+        QMetaObject.connectSlotsByName(MainWindow)
                
     
     def setupUi(self, MainWindow):
@@ -230,14 +276,14 @@ class Ui_MainWindow(QWidget, creer_Q):
         self.label_zone.setFont(self.font)
         
         items = [u"Pin\u00e8des", u"Cr\u00eate de calcaire", u"Station essence", u"Port"]
-        self.CB_zone = self.creer_QComboBox(items, u"CB_zone", QRect(150, 150, 201, 31))
+        self.QComboBox_zone = self.creer_QComboBox(items, u"QComboBox_zone", QRect(150, 150, 201, 31))
         
         items = [u"Vert", u"Jaune", u"Rouge", u"Bleu"]
-        self.CB_couleur = self.creer_QComboBox(items, u"CB_couleur", QRect(40, 150, 101, 31))
-        self.CB_couleur.currentTextChanged.connect(lambda: self.clicked_couleur(str(self.CB_couleur.currentText())))
+        self.QComboBox_couleur = self.creer_QComboBox(items, u"QComboBox_couleur", QRect(40, 150, 101, 31))
+        self.QComboBox_couleur.currentTextChanged.connect(lambda: self.clicked_couleur(str(self.QComboBox_couleur.currentText())))
         
         self.Boutton_zone = self.creer_QPushButton(u"Boutton_zone", QRect(400, 150, 91, 31),  u"OK")
-        self.Boutton_zone.clicked.connect(lambda: self.clicked_bt_zone(str(self.CB_zone.currentText())))
+        self.Boutton_zone.clicked.connect(lambda: self.clicked_bt_zone(str(self.QComboBox_zone.currentText())))
         
         self.label_ressource = self.creer_Qlabel(u"label_ressource", QRect(130, 200, 270, 61), u"Chercher Ressource")
         self.label_ressource.setStatusTip(QCoreApplication.translate(
@@ -250,43 +296,59 @@ class Ui_MainWindow(QWidget, creer_Q):
         
         self.Button_ressource = self.creer_QPushButton(u"Button_ressource", QRect(400, 270, 91, 31),  u"OK")
         
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 530, 22))
-        
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(self.centralwidget)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
-
-        QMetaObject.connectSlotsByName(MainWindow)
         
     def clicked_couleur(self, couleur):
+        """
+        Définit les éléments de la QComboBox QComboBox_zone selon la valeur de la QComboBox QComboBox_couleur.
+
+        Paramètres
+        ----------
+        couleur : unicode string : Vert/Jaune/Rouge/Bleu
+
+        Returns
+        -------
+        None.
+
+        """
         if couleur=="Vert":
             items = [u"Pin\u00e8des", u"Cr\u00eate de calcaire", u"Station essence", u"Port"]
-            self.CB_zone.clear()
-            self.CB_zone.addItems(items)
+            self.QComboBox_zone.clear()
+            self.QComboBox_zone.addItems(items)
         elif couleur=="Jaune":
             items = [u"Bosquet de pins", u"Falaises calcaires", u"H\u00f4tel", u"Brousses de ch\u00eane", u"Pied de montagne Bois\u00e9", u"F\u00f4ret des marais"]
-            self.CB_zone.clear()
-            self.CB_zone.addItems(items)
+            self.QComboBox_zone.clear()
+            self.QComboBox_zone.addItems(items)
         elif couleur=="Rouge":
-            items = [u"Usine abandonn\u00e9e", u"Fl\u00e8ches de calcaires", u"For\u00eat infect\u00e9e", u"Vieille Ferme", u"Bunker Alpha", u"Bunker Bravo", u"Commissariat de police", u"Ch\u00eaneraie", 
-                     u"For\u00eat gel\u00e9e", u"Carri\u00e8re de sable", u"\u00cele des morts", u"Tourbi\u00e8re sauvages"]
-            self.CB_zone.clear()
-            self.CB_zone.addItems(items)
+            items = [u"Usine abandonn\u00e9e", u"Fl\u00e8ches de calcaires", u"For\u00eat infect\u00e9e", u"Vieille Ferme", u"Bunker Alpha", u"Bunker Bravo", 
+                     u"Commissariat de police", u"Ch\u00eaneraie", u"For\u00eat gel\u00e9e", u"Carri\u00e8re de sable", u"\u00cele des morts", u"Tourbi\u00e8re sauvages"]
+            self.QComboBox_zone.clear()
+            self.QComboBox_zone.addItems(items)
         else:
             items = [u"Tour de guet de l'est", u"Tour de guet du nord", u"Tour de guet", u"Plate-forme p\u00e9troli\u00e8re"]
-            self.CB_zone.clear()
-            self.CB_zone.addItems(items)
+            self.QComboBox_zone.clear()
+            self.QComboBox_zone.addItems(items)
         
     def clicked_bt_zone(self, zone):
+        """
+        Définit la nouvelle fenêtre à afficher selon la zone choisie et l'ouvre.
+        
+        !!!
+        Pour l'instant utile seulement pour port.
+        !!!
+
+        Paramètres
+        ----------
+        zone : unicode string : Zone choisie
+
+        Returns
+        -------
+        None.
+
+        """
             
         if zone=="Port":
             self.w_port=Ui_WindowPort()
             self.w_port.setupUi(self.w_port)
-            #self.w_port.setupPort(self.w_port)
             self.w_port.show()
             
         else:
@@ -324,6 +386,18 @@ class Ui_WindowPort(QWidget, creer_Q):
         self.txt_style="<p style=\" margin-top:1px; margin-bottom:1px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
     
     def setupUi(self, WindowPort):
+        """
+        Mise en place des informations de la fenêtre concernant le port.
+
+        Paramètres
+        ----------
+        WindowPort : QtWidgets.Ui_WindowPort() Object : Fenêtre concernant le port.
+
+        Returns
+        -------
+        None.
+
+        """
         if WindowPort.objectName():
             WindowPort.setObjectName(u"WindowPort")
         WindowPort.setEnabled(True)
@@ -340,14 +414,14 @@ class Ui_WindowPort(QWidget, creer_Q):
         
         items = [u"Boite de mat\u00e9riaux basiques vide", u"Boite d'outils vide", u"Sac R\u00e9frig\u00e9rant vide", u"Boite de mat\u00e9riaux rares vide",
                  u"Boite de mat\u00e9riaux basiques plein", u"Boite d'outils plein", u"Sac R\u00e9frig\u00e9rant plein", u"Boite de mat\u00e9riaux rares plein"]
-        self.CB_Boite = self.creer_QComboBox(items, u"CB_Boite", QRect(180, 130, 191, 31))
+        self.QComboBox_Boite = self.creer_QComboBox(items, u"QComboBox_Boite", QRect(180, 130, 191, 31))
         
         txt = u"<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Jake</span></p></body></html>"
         self.Jake_txt = self.creer_Qlabel(u"Jake_txt", QRect(150, 70, 221, 61), txt)
         
         items = [u"Livraison", u"Laboratoire", u"Verrouill\u00e9(e)"]
-        self.CB_Livraison = self.creer_QComboBox(items, u"CB_Livraison", QRect(40, 130, 131, 31))
-        self.CB_Livraison.currentTextChanged.connect(lambda: self.clicked_Jake(str(self.CB_Livraison.currentText())))
+        self.QComboBox_Livraison = self.creer_QComboBox(items, u"QComboBox_Livraison", QRect(40, 130, 131, 31))
+        self.QComboBox_Livraison.currentTextChanged.connect(lambda: self.clicked_Jake(str(self.QComboBox_Livraison.currentText())))
         
         self.Bt_Actualiser_Boite = self.creer_QPushButton(u"Bt_Actualiser_Boite", QRect(430, 130, 91, 31),  u"Actualiser")
         self.Bt_Actualiser_Boite.clicked.connect(lambda: self.total())
@@ -494,24 +568,44 @@ class Ui_WindowPort(QWidget, creer_Q):
         
     
     def clicked_Jake(self, Jake):
+        """
+        Définit les éléments de la QComboBox QComboBox_Boite selon la valeur de la QComboBox QComboBox_Livraison.
+
+        Paramètres
+        ----------
+        Jake : Unicode string : Valeur de la QComboBox QComboBox_Livraison
+
+        Returns
+        -------
+        None.
+
+        """
         if Jake=="Livraison":
             items = [u"Boite de mat\u00e9riaux basiques vide", u"Boite d'outils vide", u"Sac R\u00e9frig\u00e9rant vide", u"Boite de mat\u00e9riaux rares vide",
                      u"Boite de mat\u00e9riaux basiques plein", u"Boite d'outils plein", u"Sac R\u00e9frig\u00e9rant plein", u"Boite de mat\u00e9riaux rares plein"]
-            self.CB_Boite.clear()
-            self.CB_zone.addItems(items)
+            self.QComboBox_Boite.clear()
+            self.QComboBox_Boite.addItems(items)
         elif Jake=="Laboratoire":
-            self.CB_Boite.clear()
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"", None))
+            self.QComboBox_Boite.clear()
+            self.QComboBox_Boite.addItem(QCoreApplication.translate("WindowPort", u"", None))
         else:
-            self.CB_Boite.clear()
-            self.CB_Boite.addItem(QCoreApplication.translate("WindowPort", u"", None))
+            self.QComboBox_Boite.clear()
+            self.QComboBox_Boite.addItem(QCoreApplication.translate("WindowPort", u"", None))
             
         
     def total_sac(self):
-        import math
-        import LDOE_port
-        import LDOE_variables
-        
+        """
+        Calcule le nombre de places utilisées dans le sac à dos et dans le chopper.
+
+        Paramètres
+        ----------
+        None.
+
+        Returns
+        -------
+        None.
+
+        """
         if(self.radioButton_sac_1.isChecked()):
             tt=15+self.spinBox_chopper.value()
         elif(self.radioButton_sac_2.isChecked()):
@@ -521,61 +615,59 @@ class Ui_WindowPort(QWidget, creer_Q):
         self.Place_sac_1.setText(QCoreApplication.translate("WindowPort", u"XX places dans le sac sur "+str(tt), None))
         self.Place_sac_2.setText(QCoreApplication.translate("WindowPort", u"XX places dans le sac sur "+str(tt), None))
         
-        if (self.CB_Boite.currentIndex()<4):
+        if (self.QComboBox_Boite.currentIndex()<4):
             Place_sac=0
-            for obj in LDOE_port.Boite_vide[self.CB_Boite.currentIndex()]:
+            for obj in LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()]:
                 for i in range(len(LDOE_variables.max_01)):
                     if(obj in LDOE_variables.max_01[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.CB_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/1)
+                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/1)
                 for i in range(len(LDOE_variables.max_20)):
                     if(obj in LDOE_variables.max_20[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.CB_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/20)
+                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/20)
                 for i in range(len(LDOE_variables.max_50)):
                     if(obj in LDOE_variables.max_50[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.CB_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/50)
+                        Place_sac+=math.ceil(LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value()/50)
             self.Place_sac_1.setText(QCoreApplication.translate("WindowPort", str(Place_sac)+u" places dans le sac sur "+str(tt), None))
         
         else:
             y=8
             
             Place_sac=0
-            for obj in LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y]:
+            for obj in LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y]:
                 for i in range(len(LDOE_variables.max_01)):
                     if(obj in LDOE_variables.max_01[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/1)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/1)
                 for i in range(len(LDOE_variables.max_20)):
                     if(obj in LDOE_variables.max_20[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/20)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/20)
                 for i in range(len(LDOE_variables.max_50)):
                     if(obj in LDOE_variables.max_50[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/50)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value()/50)
             self.Place_sac_1.setText(QCoreApplication.translate("WindowPort", str(Place_sac)+u" places dans le sac sur "+str(tt), None))
             
             Place_sac=0
-            for obj in LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1]:
+            for obj in LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1]:
                 for i in range(len(LDOE_variables.max_01)):
                     if(obj in LDOE_variables.max_01[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/1)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/1)
                 for i in range(len(LDOE_variables.max_20)):
                     if(obj in LDOE_variables.max_20[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/20)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/20)
                 for i in range(len(LDOE_variables.max_50)):
                     if(obj in LDOE_variables.max_50[i]):
-                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/50)
+                        Place_sac+=math.ceil(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value()/50)
             self.Place_sac_2.setText(QCoreApplication.translate("WindowPort", str(Place_sac)+u" places dans le sac sur "+str(tt), None))
         
         
     def total_object(self):
-        import LDOE_port
-        import LDOE_variables
-        
+         
         tempo=self.txt_before+self.txt_style
         
-        if (self.CB_Boite.currentIndex()<4):
+        if (self.QComboBox_Boite.currentIndex()<4):
             i=0
             temp=tempo+"1."
-            for obj in LDOE_port.Boite_vide[self.CB_Boite.currentIndex()]:
-                temp+=" "+str(LDOE_port.Boite_vide[self.CB_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value())+" "+obj
+            for obj in LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()]:
+                temp+=" "+str(LDOE_port.Boite_vide[self.QComboBox_Boite.currentIndex()][obj]*self.spinBox_Nb_boite.value())+" "+obj
                 if(i==0):
                     temp+="</p>\n"+self.txt_style+"    "
                 else:
@@ -588,8 +680,8 @@ class Ui_WindowPort(QWidget, creer_Q):
             i=0
             y=8
             temp=tempo+"1."
-            for obj in LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y]:
-                temp+=" "+str(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value())+" "+obj
+            for obj in LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y]:
+                temp+=" "+str(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y][obj]*self.spinBox_Nb_boite.value())+" "+obj
                 if(i==0) or (i==1):
                     temp+="</p>\n"+self.txt_style+"    "
                 else:
@@ -598,8 +690,8 @@ class Ui_WindowPort(QWidget, creer_Q):
             self.Boite_1_txt.setText(QCoreApplication.translate("WindowPort", temp, None))
             i=0
             temp=tempo+"2."
-            for obj in LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1]:
-                temp+=" "+str(LDOE_port.Boite_pleine[2*self.CB_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value())+" "+obj
+            for obj in LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1]:
+                temp+=" "+str(LDOE_port.Boite_pleine[2*self.QComboBox_Boite.currentIndex()-y+1][obj]*self.spinBox_Nb_boite.value())+" "+obj
                 if(i==0) or (i==1):
                     temp+="</p>\n"+self.txt_style+"    "
                 else:
