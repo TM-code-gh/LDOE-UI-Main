@@ -5,8 +5,6 @@ Created on Thu Feb  4 01:53:16 2021
 @author: Theo
 """
 
-import math
-
 Ressource_Bois=['Bois','Planche','Charbon','Chene','Planche chene']
 Ressource_Pierre=['Pierre','Brique']
 Ressource_Fibre=['Fibre','Tissus','Corde','Tissus epais']
@@ -21,7 +19,8 @@ Ressource_Plastique=['Plastique']
 Ressource_Lingot=['Lingot or','Barre aluminium','Fil aluminium', 'Minerai cuivre',
                   'Barre cuivre', 'Barre acier', 'Plaque aluminium', 'Plaque acier',
                   'Souffre', 'Plaque plomb', 'Bauxite']
-Ressource_Nourriture=['Carotte','Plat carottes','Champignon','Baie','Boite conserve','Pousse','Mais']
+Ressource_Nourriture=['Carotte','Plat carottes','Champignon','Baie','Boite conserve',
+                      'Pousse','Mais']
 Ressource_Soin=['Pansement','Kit soins']
 
 Ressource_Basique=['Roulement billes','Vis','Cable','Piece caoutchouc','Transistor']
@@ -33,7 +32,8 @@ Ressource_Precieux=['Vitamines','Circuit electronique','Detecteur chaleur',
                     'Fibre verre', 'Verre', 'Rouage', 'Gomme','Cle plate',
                     'Acide']
 
-Ressource_Animal=['Peau','Cuire','Renard','Viande','Viande cuite', 'Viande sechee', 'Dinde', 'Dinde rotie']
+Ressource_Animal=['Peau','Cuire','Renard','Viande','Viande cuite', 'Viande sechee', 
+                  'Dinde', 'Dinde rotie']
 
 
 max_01=[Ressource_Marteau]
