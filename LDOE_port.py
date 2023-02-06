@@ -5,9 +5,6 @@ Created on Thu Feb  4 01:42:39 2021
 @author: Theo
 """
 
-import LDOE_variables
-
-
 Boite_materiaux_basiques_vide={'Bois':3,'Corde':1}
 Boite_outils_vide={'Barre fer':3,'Ferraille':1}
 Sac_Refrigerants_vide={'Plastique':3,'Gomme':1}
@@ -35,10 +32,3 @@ Boite_pleine=[Boite_materiaux_basiques_plein_1,Boite_materiaux_basiques_plein_2,
               Boite_materiaux_rares_plein_1,Boite_materiaux_rares_plein_2]
 
 
-Nombre_de_boite=20
-
-
-
-def test():
-    print("i run fast")
-    
